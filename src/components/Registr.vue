@@ -1,5 +1,7 @@
 <script setup>
   import { supabase } from '@/supabase';
+  import InputCustom from './UI/InputCustom.vue';
+
   import { ref } from 'vue';
   
   const email = ref('');
@@ -54,14 +56,20 @@
   <h1>Регистрация</h1>
 
   <form action="" @submit.prevent="registr">
-    <div>
+    <!-- <div>
       <label for="email">Email:</label>
       <input type="email" id="email" v-model="email" required />
-    </div>
-    <div>
+    </div> -->
+    <!-- <div>
       <label for="password">Пароль:</label>
       <input type="password" id="password" v-model="password" required />
-    </div>
+    </div> -->
+    <InputCustom v-model="email" placeholder-text="E-mail" text-error="Укажите ваш E-mail" type-input="e-mail" is-required/>
+    <InputCustom v-model="password" placeholder-text="Пароль" text-error="Укажите ваш Пароль" type-input="password" is-required/>
+    
+
+    
+
     <button type="submit">Зарегистрироваться</button>
   </form>
 
