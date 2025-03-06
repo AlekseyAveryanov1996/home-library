@@ -8,6 +8,7 @@
       default: 'text',
     },
     isRequired: Boolean,
+    isError: Boolean,
   })
 
   const model = defineModel();
@@ -18,6 +19,6 @@
   <div class="input flex flex-col gap-1">
     <div class="input__placeholder text-xs">{{ placeholderText }}</div>
     <input @input="() => console.log(model)" class="rounded-2xl border-1 p-2" :type="typeInput" v-model="model" />
-    <div class="input__error text-xs">{{ textError }}</div>
+    <div class="input__error text-xs" :class='isError ? "block " : "hidden"'>{{ textError }}</div>
   </div>
 </template>
