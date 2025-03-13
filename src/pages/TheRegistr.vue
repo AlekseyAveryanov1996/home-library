@@ -84,7 +84,7 @@
       }
 
       } catch(err) {
-        console.log(err.message)
+
       }
     } else {
 
@@ -114,8 +114,6 @@
     <InputCustom v-model="password" placeholder-text="Пароль" :is-error='passwordError' :text-error="messagePassword" type-input="password" is-required/>
     <button type="submit">Зарегистрироваться</button>
   </form>
-
-  <div>{{ message }}</div>
 
   <Toast :toastText='message' :isVisible='isVisibleToast'>
     <CheckBadgeIcon class='fill-lime-500'/>
