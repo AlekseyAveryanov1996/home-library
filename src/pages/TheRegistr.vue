@@ -2,10 +2,12 @@
   import { supabase } from '@/supabase';
   import { CheckBadgeIcon } from '@heroicons/vue/24/solid';
 
+  import { MESSAGE_USERS, ERR_CODE } from '@/cosntants';
+  import functions from '@/functions';
   import InputCustom from '@/components/UI/InputCustom.vue';
   import Toast from '@/components/UI/Toast.vue';
-  import router from '@/router';
 
+  import { useToastStore } from '@/store/toaster';
   import { ref } from 'vue';
 
 
@@ -16,37 +18,9 @@
   const messagePassword = ref('');
   const emailError = ref(false)
   const passwordError = ref(false)
-  const isVisibleToast = ref(false);
-
-  const goToDashBoard = () => {
-    setTimeout(() => {
-      router.replace('/dashboard/')
-    }, 3000);
-  }
-
-  const toastVisible = () => {
-    isVisibleToast.value = true;
-    setTimeout(() => {
-      isVisibleToast.value = false;
-    }, 2000);
-  }
+  const isVisibleToast = useToastStore();
 
   const registr = async() => {
-
-    const errCode = {
-      weak: "weak_password", // слабый пароль
-      alreadyExists: 'user_already_exists', // пользователь уже существует
-      validationFailed: 'validation_failed', // пользователь уже существует
-    };
-
-    // объект с выводом сообщение об ошибке
-    const messageUsers = {
-      default: 'Поле не может быть пустым',
-      weakError: 'Пароль слишком слабый, придумайте другой',
-      alreadyExistsError: 'Такой пользователь уже существует',
-      validationFailedError: 'Некоректный E-mail',
-      success: "Пользователь зарегистрирован",
-    }
 
     if (email.value && password.value) { // если поля не пустые, то отправляем запрос
 
@@ -61,26 +35,26 @@
 
         if (error) { // если ошибка
           switch(error.code) {
-            case errCode.weak:
+            case ERR_CODE.weak:
               passwordError.value = true;
-              messagePassword.value = messageUsers.weakError;
-              throw new Error(messageUsers.weakError)
-            case errCode.alreadyExists:
+              messagePassword.value = MESSAGE_USERS.weakError;
+              throw new Error(MESSAGE_USERS.weakError)
+            case ERR_CODE.alreadyExists:
               emailError.value = true;
-              messageEmail.value = messageUsers.alreadyExistsError;
-              throw new Error(messageUsers.alreadyExistsError)
-            case errCode.validationFailed:
+              messageEmail.value = MESSAGE_USERS.alreadyExistsError;
+              throw new Error(MESSAGE_USERS.alreadyExistsError)
+            case ERR_CODE.validationFailed:
               emailError.value = true;
-              messageEmail.value = messageUsers.validationFailedError;
-              throw new Error(messageUsers.validationFailedError)
+              messageEmail.value = MESSAGE_USERS.validationFailedError;
+              throw new Error(MESSAGE_USERS.validationFailedError)
           }
         }
 
       // если регистрация успешна
       if (data.user.role) {
-        message.value = messageUsers.success; // показываем сообщение об успешной регистрации
-        toastVisible(); // показываем сообщение об успешной регистрации
-        goToDashBoard(); // перенаправляем на главную страницу рабочей области
+        message.value = MESSAGE_USERS.success; // показываем сообщение об успешной регистрации
+        functions.toastVisible(isVisibleToast); // показываем сообщение об успешной регистрации
+        functions.goToRoute('/dashboard/'); // перенаправляем на главную страницу рабочей области
       }
 
       } catch(err) {
@@ -93,12 +67,12 @@
 
       // проверка на пустые поля
       if (!email.value) {
-        messageEmail.value = messageUsers.default
+        messageEmail.value = MESSAGE_USERS.default
         emailError.value = true;
       }
 
       if (!password.value) {
-        messagePassword.value = messageUsers.default
+        messagePassword.value = MESSAGE_USERS.default
         passwordError.value = true;
       }
     }

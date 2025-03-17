@@ -2,10 +2,14 @@
 import { supabase } from '@/supabase';
 import { ShieldExclamationIcon, CheckBadgeIcon } from '@heroicons/vue/24/solid';
 
+import { MESSAGE_USERS, ERR_CODE } from '@/cosntants';
+import functions from '@/functions';
 import InputCustom from '@/components/UI/InputCustom.vue';
 import Toast from '@/components/UI/Toast.vue';
-import router from '@/router';
+
+import { useToastStore } from '@/store/toaster';
 import { ref } from 'vue';
+
 
 const email = ref('');
 const password = ref('');
@@ -14,31 +18,7 @@ const messageEmail = ref('');
 const messagePassword = ref('');
 const emailError = ref(false);
 const passwordError = ref(false);
-const isVisibleToast = ref(false);
-
-// объект с выводом сообщение об ошибке
-const messageUsers = {
-  default: 'Поле не может быть пустым',
-  logged: "Успешная авторизация"
-}
-
-const errCode = {
-  invalid_credentials: 'Неправильный логин или пароль',
-};
-
-const toastVisible = () => {
-  isVisibleToast.value = true;
-  setTimeout(() => {
-    isVisibleToast.value = false;
-  }, 2000);
-}
-
-const goToDashBoard = () => {
-  setTimeout(() => {
-    router.replace('/dashboard/')
-  }, 3000);
-}
-
+const isVisibleToast = useToastStore();
 
 const auth = async () => {
 
@@ -54,19 +34,19 @@ const auth = async () => {
       })
 
       if (error) {
-        throw new Error(errCode.invalid_credentials);
+        throw new Error(ERR_CODE.invalid_credentials);
       }
 
       // если успешно
       if (data.session) {
-        message.value = messageUsers.logged; //показываем сообщение об успешной регистрации
-        toastVisible();
-        goToDashBoard(); // перенаправляем на главную страницу рабочей области
+        message.value = MESSAGE_USERS.logged; //показываем сообщение об успешной регистрации
+        functions.toastVisible(isVisibleToast);
+        functions.goToRoute('/dashboard/'); // перенаправляем на главную страницу рабочей области
       }
 
     } catch (err) {
-      message.value = errCode.invalid_credentials;
-      toastVisible();
+      message.value = ERR_CODE.invalid_credentials;
+      functions.toastVisible(isVisibleToast);
 
     }
   } else {
@@ -75,12 +55,12 @@ const auth = async () => {
 
     // проверка на пустые поля
     if (!email.value) {
-      messageEmail.value = messageUsers.default
+      messageEmail.value = MESSAGE_USERS.default
       emailError.value = true;
     }
 
     if (!password.value) {
-      messagePassword.value = messageUsers.default
+      messagePassword.value = MESSAGE_USERS.default
       passwordError.value = true;
     }
   }
