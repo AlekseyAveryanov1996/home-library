@@ -77,7 +77,7 @@ const auth = async () => {
   </form>
 
   <Toast :toastText='message' :isVisible='isVisibleToast'>
-    <ShieldExclamationIcon v-if="message === errCode.invalid_credentials" class='fill-red-700'/>
+    <ShieldExclamationIcon v-if="message === ERR_CODE.invalid_credentials" class='fill-red-700'/>
     <CheckBadgeIcon v-else class='fill-lime-500'/>
   </Toast>
 
