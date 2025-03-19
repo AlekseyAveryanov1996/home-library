@@ -7,7 +7,7 @@
   import InputCustom from '@/components/UI/InputCustom.vue';
   import Toast from '@/components/UI/Toast.vue';
 
-  import { useToastStore } from '@/store/toaster';
+  import { useToastStore } from '@/stores/toaster';
   import { ref } from 'vue';
 
 
