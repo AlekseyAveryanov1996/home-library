@@ -1,23 +1,32 @@
 <script setup>
-  import { onMounted } from 'vue';
+  import { ref } from 'vue';
   import functions from './functions';
 
-  onMounted( async () => {
-    try {
-      const userData = await functions.getUser();
-      if (userData) {
-        functions.goToRoute('/dashboard/', 1000)
-      } else {
-        throw new Error("Пользователь не авторизован");
+  const finishedAnim = ref(false);
+
+  async function onAnimationsFinished(data) {
+    finishedAnim.value = true
+
+    if (finishedAnim.value) { // если анимация завершилась, то начинаем получать данные
+      try {
+        const userData = await functions.getUser();
+        if (userData) {
+          functions.goToRoute('/dashboard/', 1)
+        } else {
+          throw new Error("Пользователь не авторизован");
+        }
+      } catch (error) {
+        console.log(error.message)
+        functions.goToRoute('/logIn/', 1000)
       }
-    } catch (error) {
-      console.log(error.message)
-      functions.goToRoute('/logIn/', 1000)
     }
-  })
+  }
+
 
 </script>
 
 <template>
-  <RouterView />
+  <div>
+    <RouterView @anim-finished='onAnimationsFinished'/>
+  </div>
 </template>
