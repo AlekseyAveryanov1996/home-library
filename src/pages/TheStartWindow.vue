@@ -1,15 +1,18 @@
 <script setup>
-  const emit = defineEmits(['animFinished']);
+import TheDashBoard from '@/components/TheDashBoard.vue';
+import { ref } from 'vue';
 
-  function onAnimationEnd() {
-    emit('animFinished', { detail: 'Анимация закончена' });
-  }
+const isVisibleDashBoard = ref(false);
 
 </script>
 
 
+
 <template>
-  <div class='box' @animationend='onAnimationEnd'>start Window</div>
+  start Window
+
+  <TheDashBoard  v-if='isVisibleDashBoard'/>
+
 </template>
 
 <style>

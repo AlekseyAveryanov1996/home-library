@@ -41,7 +41,7 @@ const auth = async () => {
       if (data.session) {
         message.value = MESSAGE_USERS.logged; //показываем сообщение об успешной регистрации
         functions.toastVisible(isVisibleToast);
-        functions.goToRoute('/dashboard/'); // перенаправляем на главную страницу рабочей области
+        functions.goToRoute('/'); // перенаправляем на главную страницу рабочей области
       }
 
     } catch (err) {
