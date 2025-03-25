@@ -54,7 +54,7 @@
       if (data.user.role) {
         message.value = MESSAGE_USERS.success; // показываем сообщение об успешной регистрации
         functions.toastVisible(isVisibleToast); // показываем сообщение об успешной регистрации
-        functions.goToRoute('/dashboard/'); // перенаправляем на главную страницу рабочей области
+        functions.goToRoute('/'); // перенаправляем на главную страницу рабочей области
       }
 
       } catch(err) {

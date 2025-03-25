@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import TheDashBoard from '@/pages/TheDashBoard.vue'
 import TheRegistr from '@/pages/TheRegistr.vue'
 import TheLogIn from '@/pages/TheLogIn.vue'
 import TheStartWindow from '@/pages/TheStartWindow.vue'
+import functions from '@/functions'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,23 +11,34 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: TheStartWindow,
+      meta: { requiresAuth: true }
     },
     {
       path: '/registration/',
       name: 'registration',
       component: TheRegistr,
+      meta: { requiresAuth: false }
     },
     {
       path: '/logIn/',
       name: 'logIn',
-      component: TheLogIn
-    },
-    {
-      path: '/dashboard/',
-      name: 'dashboard',
-      component: TheDashBoard,
+      component: TheLogIn,
+      meta: { requiresAuth: false }
     },
   ],
+})
+
+router.beforeEach(async (to, from, next) => {
+  const isAuth = await functions.getUser();
+
+  if (to.meta.requiresAuth && !isAuth) {
+    next('/logIn/');
+  } else if (!to.meta.requiresAuth && isAuth) {
+    next('/');
+  } else {
+    next();
+  }
+  
 })
 
 export default router
