@@ -1,4 +1,6 @@
 // import './assets/main.css'
+import { register } from 'swiper/element/bundle';
+register();
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
