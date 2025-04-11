@@ -8,8 +8,10 @@
 
 <template>
   <div class="start-window__item">
-    <div class="start-window__item-img">
-      <img :src='srcImage' :alt='titleText'>
+    <div class="start-window__item-img-wrapper">
+      <div class="start-window__item-img">
+        <img :src='srcImage' :alt='titleText'>
+      </div>
     </div>
     <div class="start-window__item-text">
       {{ titleText }}
@@ -25,19 +27,26 @@
       gap: 20px
       &-text
         color: #fff
+        text-align: center
       &-img
+        border-radius: 20px;
+        overflow hidden
+        transition: all ease 0.5s
+      &-img-wrapper
         position relative
         &::before
           content: ''
           position: absolute
-          width calc(100% + 40px)
-          height: calc(100% + 40px)
+          width calc(100% + 10px)
+          height: calc(100% + 10px)
           background: red
-          border-radius: 50%
-          left: -20px
-          top: -20px
+          left: -5px
+          top: -5px
           z-index -1
           background: linear-gradient(90deg, #131f0f,#206f54,#1d6363);
-          // opacity 0
-          // visibility: hidden
+          border-radius: 20px;
+          opacity 0
+          visibility hidden
+          transition: all ease 0.5s
+          filter: blur(5px);
 </style>
