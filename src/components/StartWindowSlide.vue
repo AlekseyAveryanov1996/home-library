@@ -28,6 +28,12 @@
       &-text
         color: #fff
         text-align: center
+        font-size: 14px;
+        line-height: 16px;
+        font-style: italic;
+        +min(tabletLarge)
+          font-size: 20px;
+          line-height: 24px;
       &-img
         border-radius: 20px;
         overflow hidden
@@ -37,16 +43,15 @@
         &::before
           content: ''
           position: absolute
-          width calc(100% + 10px)
-          height: calc(100% + 10px)
-          background: red
-          left: -5px
-          top: -5px
+          width calc(100% + 20px)
+          height: calc(100% + 20px)
+          left: -10px
+          top: -10px
           z-index -1
           background: linear-gradient(90deg, #131f0f,#206f54,#1d6363);
           border-radius: 20px;
           opacity 0
           visibility hidden
           transition: all ease 0.5s
-          filter: blur(5px);
+          filter: blur(7px);
 </style>

@@ -2,6 +2,7 @@
   import { onMounted } from 'vue';
   import StartWindowSlide from './StartWindowSlide.vue';
   import Swiper from 'swiper';
+  import { animate } from 'animejs';
 
   function initSwiperStartWindow() {
     const swiperStartWindow = new Swiper('.js-start-window-sl', {
@@ -29,8 +30,40 @@
     });
   }
 
+  function animCharWelcome(selector) {
+    const element = document.querySelector(selector);
+    const text = element.textContent;
+    element.textContent = '';
+
+    text.split('').forEach((char, i) => {
+      const span = document.createElement('span');
+      span.textContent = char === ' ' ? '\u00A0' : char;;
+      span.style.opacity = 0;
+      span.style.display = 'inline-block';
+      element.appendChild(span);
+
+      animate(span,
+      {
+        opacity: [0, 1],
+        y: [
+          { to: '-2.75rem', ease: 'outExpo', duration: 600 },
+          { to: 0, ease: 'outBounce', duration: 800, delay: 100 }
+        ],
+        rotate: {
+          from: '-1turn',
+          delay: 0
+        },
+        duration: 1000,
+        delay: i * 50, // Задержка между буквами
+        easing: 'easeOutExpo',
+      });
+
+    })
+  }
+
   onMounted(() => {
     initSwiperStartWindow();
+    animCharWelcome('.start-window__main-text');
   })
 
 </script>
@@ -74,7 +107,25 @@
         +min(tabletLarge)
           .start-window__item-img
             transform: rotateY(30deg)
+    &__main-text
+      font-weight: 700
+      position absolute
+      top: 50%
+      left: 50%
+      transform: translate(-50%, -50%)
+      z-index 1
+      color: #fff
+      font-size: 1.75rem
+      line-height: 1.75rem
+      white-space: nowrap
+      font-style: italic
+      +min(mobile)
+        font-size: 2.25rem
+      +min(tabletLarge)
+        font-size: 5rem
   .swiper-slide
+    opacity 0
+    visibility: hidden
     .start-window__item
       perspective: 2000px
     &:hover
@@ -83,6 +134,7 @@
           transform: rotateY(0deg) !important
         .start-window__item-img-wrapper
           &::before
+            background: linear-gradient(90deg, #131f0f,#206f54,#1d6363);
             opacity 1
             visibility: visible;
         &~.swiper-slide
