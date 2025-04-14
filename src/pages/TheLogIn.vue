@@ -6,6 +6,7 @@ import { MESSAGE_USERS, ERR_CODE } from '@/cosntants';
 import functions from '@/functions';
 import InputCustom from '@/components/UI/InputCustom.vue';
 import Toast from '@/components/UI/Toast.vue';
+import Btn from '@/components/UI/Btn.vue'
 
 import { useToastStore } from '@/stores/toaster';
 import { ref } from 'vue';
@@ -73,7 +74,7 @@ const auth = async () => {
   <form action="" @submit.prevent="auth">
     <InputCustom v-model='email' placeholder-text="E-mail" :is-error='emailError' :text-error='messageEmail' type-input="e-mail" is-required/>
     <InputCustom v-model='password' placeholder-text="Пароль" :is-error='passwordError' :text-error='messagePassword' type-input="password" is-required/>
-    <button type="submit">Войти в систему</button>
+    <Btn :type="'submit'">Войти в систему</Btn>
   </form>
 
   <Toast :toastText='message' :isVisible='isVisibleToast'>

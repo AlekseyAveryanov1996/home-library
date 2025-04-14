@@ -5,14 +5,28 @@ import { onMounted, ref } from 'vue';
 
 const isVisibleDashBoard = ref(false);
 
+function getTimeHour() {
+  return new Date().getHours();
+}
+
 function visibleDashBoard(value) {
-  isVisibleDashBoard.value = value
-  localStorage.setItem('DashBoard', true);
+  isVisibleDashBoard.value = value // показываем DashBoard после вступительного приветствия
+
+  // задаем параметры для определения, в какое время зашел пользователь
+  localStorage.setItem('DashBoard', JSON.stringify({
+    flagisActive: true,
+    timeInput: getTimeHour(),
+  }));
 }
 
 onMounted(() => {
+  // получаем данные из LocalStorage последний вход был меньше чем 2 часа назад, то показываем DashBoard
   let lsDashBoard = localStorage.getItem('DashBoard');
-  if (lsDashBoard) isVisibleDashBoard.value = true;
+  if (lsDashBoard) {
+    if (JSON.parse(lsDashBoard).flagisActive && ((getTimeHour() - JSON.parse(lsDashBoard).timeInput)) <= 2 ) {
+      isVisibleDashBoard.value = true;
+    }
+  }
 })
 </script>
 

@@ -1,6 +1,7 @@
 <script setup>
   import { supabase } from '@/supabase';
   import { CheckBadgeIcon } from '@heroicons/vue/24/solid';
+  import Btn from '@/components/UI/Btn.vue'
 
   import { MESSAGE_USERS, ERR_CODE } from '@/cosntants';
   import functions from '@/functions';
@@ -86,7 +87,7 @@
   <form action="" @submit.prevent="registr">
     <InputCustom v-model="email" placeholder-text="E-mail" :isError='emailError' :text-error="messageEmail" type-input="e-mail" is-required/>
     <InputCustom v-model="password" placeholder-text="Пароль" :is-error='passwordError' :text-error="messagePassword" type-input="password" is-required/>
-    <button type="submit">Зарегистрироваться</button>
+    <Btn :type="'submit'">Зарегистрироваться</Btn>
   </form>
 
   <Toast :toastText='message' :isVisible='isVisibleToast'>

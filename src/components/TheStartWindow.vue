@@ -3,6 +3,7 @@
   import StartWindowSlide from './StartWindowSlide.vue';
   import Swiper from 'swiper';
   import { animate, createTimeline, stagger } from 'animejs';
+  import Btn from '@/components/UI/Btn.vue'
 
   const emit = defineEmits(['visibleDashBoard'])
 
@@ -98,6 +99,7 @@
   onMounted(() => {
     initSwiperStartWindow();
 
+    // Анимация стартового экрана при помощи библиотеки Anime.js
     const tl = createTimeline()
       .call(animCharWelcome('.start-window__main-text'), 0)
       .call(() => initBombAnim('.start-window__main-text span'), 2500)
@@ -107,6 +109,12 @@
         duration: 1500,
         delay: stagger(100)
       }, 3000)
+      .add('.start-window__main-btn', {
+        y: ['10rem', 0],
+        opacity: [0, 1],
+        visibility: 'visible',
+        duration: 1500,
+      }, 4000)
 
   })
 
@@ -137,7 +145,9 @@
       </div>
 
       <div class="start-window__main-text">Добро пожаловать</div>
-      <div @click='startProgramm' class="start-window__main-btn">Продолжить</div>
+
+      <Btn @click='startProgramm' :class="'start-window__main-btn'">Продолжить</Btn>
+
     </div>
 
   </div>
@@ -164,10 +174,19 @@
       white-space: nowrap
       font-style: italic
       pointer-events: none
+      padding: 100px 30px
+      overflow hidden
       +min(mobile)
         font-size: 2.25rem
       +min(tabletLarge)
         font-size: 5rem
+        padding: 200px 200px
+    &__main-btn
+      margin-top: 40px
+      opacity 0
+      visibility: hidden
+      +min(tabletLarge)
+        margin-top: 60px
   .swiper-slide
     opacity 0
     .start-window__item
