@@ -48,7 +48,6 @@
 
 <template>
 
-
   <TheNavDashBoard @toggle-current-component='handleToggleComponent'/>
 
   <!-- показываем нужный компонент -->

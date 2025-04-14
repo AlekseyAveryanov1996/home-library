@@ -2,7 +2,9 @@
   import { onMounted } from 'vue';
   import StartWindowSlide from './StartWindowSlide.vue';
   import Swiper from 'swiper';
-  import { animate } from 'animejs';
+  import { animate, createTimeline, stagger } from 'animejs';
+
+  const emit = defineEmits(['visibleDashBoard'])
 
   function initSwiperStartWindow() {
     const swiperStartWindow = new Swiper('.js-start-window-sl', {
@@ -28,6 +30,10 @@
         },
       },
     });
+  }
+
+  function getRandomArbitary(min, max) {
+    return Math.random() * (max - min) + min;
   }
 
   function animCharWelcome(selector) {
@@ -61,9 +67,47 @@
     })
   }
 
+  function initBombAnim(selector) {
+    const element = document.querySelectorAll(selector);
+    element.forEach((char, i) => {
+      const rand1 = getRandomArbitary(-25, 25).toFixed(2);
+      const rand2 = getRandomArbitary(-25, 25).toFixed(2);
+
+      animate(char, {
+        y: [
+          { to: `${rand1}rem`, ease: 'out', duration: 400 },
+        ],
+        x: [
+          { to: `${rand2}rem`, ease: 'out', duration: 400 },
+        ],
+        opacity: [1, 0],
+        duration: 500,
+        delay: i * 50, // Задержка между буквами
+        easing: 'ease',
+      })
+
+    })
+  }
+
+  function startProgramm() {
+    emit('visibleDashBoard', true);
+  }
+
+
+
   onMounted(() => {
     initSwiperStartWindow();
-    animCharWelcome('.start-window__main-text');
+
+    const tl = createTimeline()
+      .call(animCharWelcome('.start-window__main-text'), 0)
+      .call(() => initBombAnim('.start-window__main-text span'), 2500)
+      .add('.swiper-slide', {
+        y: ['10rem', 0],
+        opacity: [0, 1],
+        duration: 1500,
+        delay: stagger(100)
+      }, 3000)
+
   })
 
 </script>
@@ -93,15 +137,15 @@
       </div>
 
       <div class="start-window__main-text">Добро пожаловать</div>
-      <div class="start-window__main-btn">Продолжить</div>
+      <div @click='startProgramm' class="start-window__main-btn">Продолжить</div>
     </div>
-
 
   </div>
 </template>
 
 <style lang='stylus'>
   .start-window
+    overflow hidden
     &__anim-lists
       &:hover
         +min(tabletLarge)
@@ -119,13 +163,13 @@
       line-height: 1.75rem
       white-space: nowrap
       font-style: italic
+      pointer-events: none
       +min(mobile)
         font-size: 2.25rem
       +min(tabletLarge)
         font-size: 5rem
   .swiper-slide
     opacity 0
-    visibility: hidden
     .start-window__item
       perspective: 2000px
     &:hover
