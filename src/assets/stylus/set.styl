@@ -76,3 +76,21 @@ ph(opt,val)
   overflow hidden
   position absolute
   width 1px
+
+.container-block
+  width 100%
+  padding: 0 16px
+  +min(tabletLarge)
+    max-width: 1200px
+    margin-left: auto
+    margin-right: auto
+    padding: 0 20px
+  +min(wide)
+    max-width: 1440px
+  +min(base)
+    max-width: 1720px
+
+img
+  max-width: 100%
+  width auto
+  height: auto

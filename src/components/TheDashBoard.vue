@@ -30,9 +30,11 @@
   // import TheListsBooks from '@/components/TheListsBooks.vue';
   // import TheRead from '@/components/TheRead.vue';
   import TheNavDashBoard from '@/components/TheNavDashBoard.vue';
+  import TheHeader from './TheHeader.vue';
   import { COMPONENTS_DASHBOARD } from '@/cosntants';
 
   import { computed, ref } from 'vue';
+
 
 
   const dashBoardTabs = ref('TheListsBooks'); // показываем по умолчанию
@@ -48,9 +50,44 @@
 
 <template>
 
-  <TheNavDashBoard @toggle-current-component='handleToggleComponent'/>
+  <div class="dashboard">
+    <TheHeader />
+    <TheNavDashBoard @toggle-current-component='handleToggleComponent'/>
+    <div class="main">
+      <!-- показываем нужный компонент -->
+      <component :is="currentComponent" />
+    </div>
+  </div>
 
-  <!-- показываем нужный компонент -->
-  <component :is="currentComponent" />
+
+
+
 
 </template>
+
+<style lang='stylus'>
+  .dashboard
+    display: flex
+    flex-direction: column
+    height: 100dvh
+    background: linear-gradient(90deg, rgba(19, 31, 15, 1) 0%, rgba(32, 111, 84, 1) 50%, rgba(29, 99, 99, 1) 100%);
+    +min(tablet)
+      display: grid
+      grid-template-columns: .18fr 1fr
+      grid-template-rows: min-content 1fr
+
+  .main
+    padding: 20px 16px
+    overflow-y: auto
+    +min(tablet)
+      padding: 40px 20px
+    &::-webkit-scrollbar
+      width: 10px
+    &::-webkit-scrollbar-track
+      background: transparent
+    &::-webkit-scrollbar-thumb
+      background-color #15D494
+      border-radius: 20px;
+
+
+</style>
