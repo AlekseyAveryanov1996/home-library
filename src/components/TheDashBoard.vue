@@ -1,41 +1,11 @@
 <script setup>
-  import { supabase } from '@/supabase';
-
-  // const {data: {user} } = await supabase.auth.getUser();
-
-  // console.log(user.email);
-  // console.log(user.id);
-
-  // отправляем данные в таблицу
-
-  // const { task, error } = await supabase
-  // .from('tasks')
-  // .insert([
-  //   { task_name: 'Купить молоко2', user_id: user.id }
-  // ]);
-
-  // получаем данные из таблицы
-
-  // const { data: tasks, error } = await supabase
-  // .from('tasks')
-  // .select('*')
-  // .eq('user_id', user.id); // Фильтр по user_id
-
-  // if (error) {
-  //   console.error('Ошибка:', error);
-  // } else {
-  //   console.log('Данные:', JSON.stringify(tasks));
-  // }
-
-  // import TheListsBooks from '@/components/TheListsBooks.vue';
-  // import TheRead from '@/components/TheRead.vue';
   import TheNavDashBoard from '@/components/TheNavDashBoard.vue';
   import TheHeader from './TheHeader.vue';
   import { COMPONENTS_DASHBOARD } from '@/cosntants';
 
   import { computed, ref } from 'vue';
 
-
+  const isLoading = ref(false);
 
   const dashBoardTabs = ref('TheListsBooks'); // показываем по умолчанию
 
@@ -57,6 +27,7 @@
       <!-- показываем нужный компонент -->
       <component :is="currentComponent" />
     </div>
+    <div v-if="isLoading" class="loader">loader</div>
   </div>
 
 
@@ -88,6 +59,19 @@
     &::-webkit-scrollbar-thumb
       background-color #15D494
       border-radius: 20px;
+
+
+  .loader
+    position: absolute
+    top: 0;
+    left: 0;
+    width 100%
+    height: 100%
+    z-index 10
+    background: rgba(0, 0, 0, 0.5)
+    display: flex
+    justify-content: center
+    align-items: center
 
 
 </style>
