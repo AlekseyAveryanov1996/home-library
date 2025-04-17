@@ -2,27 +2,34 @@
   import { supabase } from '@/supabase';
   import { onMounted, ref } from 'vue';
   import Book from './Book.vue';
+  import functions from '@/functions';
 
-  const books = ref([]);
+  const books = ref([]); // переменная для получения списка книг
+  const userID = ref(''); // переменная для фильтрации данных по Пользователя
+
+
   // получаем данные из таблицы
   async function getBooks() {
+    userID.value = (await functions.getUser()).userid // получаем ID авторизованного Пользователя
+
+    //делаем запрос к данным и обрабатываем ответ
     try {
       const { data, error } = await supabase
       .from('listsBooks')
       .select('*')
+      .eq('user_id', userID.value) // Фильтр по user_id
 
       if (error) {
         throw new Error("Ошибка получения данных");
       }
       books.value = data;
-      console.log(books.value)
     } catch (error) {
       console.log(error)
     }
   }
 
   onMounted(() => {
-    getBooks();
+    getBooks(); // вызываем после того, как страница подгрузилась полностью
   })
 
 </script>

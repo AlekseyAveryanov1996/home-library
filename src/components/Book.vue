@@ -11,7 +11,7 @@
   })
 
   const timeReading = ref(null);
-  console.log(timeReading.value);
+  // console.log(timeReading.value);
 </script>
 
 <template>
