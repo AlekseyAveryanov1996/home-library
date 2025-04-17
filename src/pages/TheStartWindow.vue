@@ -2,6 +2,9 @@
 import TheDashBoard from '@/components/TheDashBoard.vue';
 import TheStartWindow from '@/components/TheStartWindow.vue';
 import { onMounted, ref } from 'vue';
+import { useUserStore } from '@/stores/userStore';
+
+const userStore = useUserStore(); // регистрируем Store
 
 const isVisibleDashBoard = ref(false);
 
@@ -19,7 +22,10 @@ function visibleDashBoard(value) {
   }));
 }
 
-onMounted(() => {
+onMounted( async () => {
+
+  await userStore.fetchUser(); // загружаем данные пользователя
+
   // получаем данные из LocalStorage последний вход был меньше чем 2 часа назад, то показываем DashBoard
   let lsDashBoard = localStorage.getItem('DashBoard');
   if (lsDashBoard) {
