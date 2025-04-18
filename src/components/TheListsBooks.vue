@@ -1,45 +1,15 @@
 <script setup>
-  import { supabase } from '@/supabase';
-  import { onMounted, ref } from 'vue';
+  import { computed, onMounted, ref } from 'vue';
   import Book from './Book.vue';
-  import { useUserStore } from '@/stores/userStore';
-  import { useLoaderStore } from '@/stores/loaderStore';
+  import { useBooksStore } from '@/stores/booksStore';
 
-  const userStore = useUserStore(); // регистрируем сторе
-  const loaderStore = useLoaderStore(); // вызываем store с Loader
-  const books = ref([]); // переменная для получения списка книг
+  const booksStore = useBooksStore();
+  const books = computed(() => booksStore.books) // сохраняем книги в переменную
 
-
-
-  // получаем данные из таблицы
-  async function getBooks() {
-    //делаем запрос к данным и обрабатываем ответ
-    try {
-
-      loaderStore.isVisibleLoader = true; // показываем, что идет загрузка
-
-      const { data, error } = await supabase
-      .from('listsBooks')
-      .select('*')
-      .eq('user_id', userStore.userid) // Фильтр по user_id, получаем id пользователя из STORE
-
-      if (error) {
-        throw new Error("Ошибка получения данных");
-      }
-      books.value = data;
-
-      // если запрос прошел успешно то меняем на false (отключаем Loader)
-      loaderStore.isVisibleLoader = false;
-    } catch (error) {
-      // если ошибка, то показываем загрузку и передаем в родитеский компонент
-      console.log(error)
-    }
-  }
-
-  onMounted(() => {
-    getBooks(); // вызываем после того, как страница подгрузилась полностью
+  onMounted(async() => {
+    await booksStore.loadBooks(); // загружаем книги
   })
-
+  
 </script>
 
 <template>
