@@ -3,15 +3,21 @@
   import { onMounted, ref } from 'vue';
   import Book from './Book.vue';
   import { useUserStore } from '@/stores/userStore';
-
+  import { useLoaderStore } from '@/stores/loaderStore';
 
   const userStore = useUserStore(); // регистрируем сторе
+  const loaderStore = useLoaderStore(); // вызываем store с Loader
   const books = ref([]); // переменная для получения списка книг
+
+
 
   // получаем данные из таблицы
   async function getBooks() {
     //делаем запрос к данным и обрабатываем ответ
     try {
+
+      loaderStore.isVisibleLoader = true; // показываем, что идет загрузка
+
       const { data, error } = await supabase
       .from('listsBooks')
       .select('*')
@@ -21,7 +27,11 @@
         throw new Error("Ошибка получения данных");
       }
       books.value = data;
+
+      // если запрос прошел успешно то меняем на false (отключаем Loader)
+      loaderStore.isVisibleLoader = false;
     } catch (error) {
+      // если ошибка, то показываем загрузку и передаем в родитеский компонент
       console.log(error)
     }
   }
@@ -44,7 +54,7 @@
         :key='book.id'/>
     </div>
   </div>
-  <div v-else>У Вас нет книг</div>
+  <div v-else>Список книг пуст</div>
 </template>
 
 <style lang="stylus">

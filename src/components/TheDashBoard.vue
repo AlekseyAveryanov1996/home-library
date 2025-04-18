@@ -2,10 +2,13 @@
   import TheNavDashBoard from '@/components/TheNavDashBoard.vue';
   import TheHeader from './TheHeader.vue';
   import { COMPONENTS_DASHBOARD } from '@/cosntants';
-
+  import Loader from './UI/Loader.vue';
+  import { useLoaderStore } from '@/stores/loaderStore';
   import { computed, ref } from 'vue';
 
-  const isLoading = ref(false);
+  const loaderStore = useLoaderStore();
+
+  const isLoading = computed(() => loaderStore.isVisibleLoader);
 
   const dashBoardTabs = ref('TheListsBooks'); // показываем по умолчанию
 
@@ -15,6 +18,7 @@
   function handleToggleComponent(component) {
     dashBoardTabs.value = component;
   }
+
 
 </script>
 
@@ -27,12 +31,11 @@
       <!-- показываем нужный компонент -->
       <component :is="currentComponent" />
     </div>
-    <div v-if="isLoading" class="loader">loader</div>
+
+    <Loader :isVisible='isLoading'/> <!--Меняем состояние Loader-->
+
+    <!-- <div v-if="isLoading" class="loader">loader</div> -->
   </div>
-
-
-
-
 
 </template>
 
@@ -59,19 +62,6 @@
     &::-webkit-scrollbar-thumb
       background-color #15D494
       border-radius: 20px;
-
-
-  .loader
-    position: absolute
-    top: 0;
-    left: 0;
-    width 100%
-    height: 100%
-    z-index 10
-    background: rgba(0, 0, 0, 0.5)
-    display: flex
-    justify-content: center
-    align-items: center
 
 
 </style>
