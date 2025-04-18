@@ -6,6 +6,7 @@ export const useUserStore = defineStore('user', () => {
 
   const userid = ref(null);
   const emailUser = ref(null);
+  const userLoading = ref(false);
 
   const fetchUser = async () => {
 
@@ -13,12 +14,15 @@ export const useUserStore = defineStore('user', () => {
       const { data, error } = await supabase.auth.getUser();
 
       if (error) {
+        userLoading.value = false; // загрузка завершения но пользователь не авторизован
         throw new Error("Ошибка получения пользователя");
       }
 
       userid.value = data.user.id;
       emailUser.value = data.user.email;
+      userLoading.value = true;
     } catch (err) {
+      userLoading.value = false;
       console.log(err);
     }
   }
@@ -26,6 +30,7 @@ export const useUserStore = defineStore('user', () => {
   return {
     userid,
     emailUser,
+    userLoading,
     fetchUser,
   }
 })

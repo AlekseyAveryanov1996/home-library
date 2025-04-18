@@ -1,5 +1,4 @@
 import router from '@/router';
-import { supabase } from '@/supabase';
 
 function toastVisible(isVisible, timeout = 2000) {
   isVisible.value = true;
@@ -14,23 +13,4 @@ function goToRoute(route, timeout = 3000) {
   }, timeout);
 }
 
-async function getUser() {
-
-  let userid;
-  let emailUser;
-
-  try {
-    const { data, error } = await supabase.auth.getUser();
-    userid = data.user.id;
-    emailUser = data.user.email;
-    return {
-      userid,
-      emailUser,
-    };
-  } catch {
-
-  }
-
-}
-
-export default { toastVisible, goToRoute, getUser };
+export default { toastVisible, goToRoute };

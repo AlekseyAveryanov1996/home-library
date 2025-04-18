@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import TheRegistr from '@/pages/TheRegistr.vue'
 import TheLogIn from '@/pages/TheLogIn.vue'
 import TheStartWindow from '@/pages/TheStartWindow.vue'
-import functions from '@/functions'
+import { useUserStore } from '@/stores/userStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,7 +29,11 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  const isAuth = await functions.getUser();
+
+  const usersStore = useUserStore();
+  await usersStore.fetchUser();
+  
+  const isAuth = await usersStore.userLoading;
 
   if (to.meta.requiresAuth && !isAuth) {
     next('/logIn/');
@@ -38,7 +42,7 @@ router.beforeEach(async (to, from, next) => {
   } else {
     next();
   }
-  
+
 })
 
 export default router
