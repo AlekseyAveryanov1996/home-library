@@ -16,6 +16,7 @@
   <div v-if="books.length" class="books">
     <div class="books__lists">
       <Book v-for="book of books"
+        :id="book.id"
         :book-name='book.name_book'
         :autor-name='book.autor_book'
         :date-start-read='book.date_start_read'
@@ -24,7 +25,8 @@
         :in-collection='book.in_collection'
         :reading='book.reading'
         :read_it='book.read_it'
-        :key='book.id'/>
+        :key='book.id'
+        />
     </div>
   </div>
   <div v-else>Список книг пуст</div>

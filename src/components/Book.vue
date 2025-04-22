@@ -1,8 +1,12 @@
 <script setup>
-  import { ref } from 'vue';
+  import { computed, ref } from 'vue';
   import { ClockIcon, ArchiveBoxArrowDownIcon, BookOpenIcon, CogIcon, RectangleStackIcon } from '@heroicons/vue/24/solid';
+  import { useBooksStore } from '@/stores/booksStore';
+
+  const booksStore = useBooksStore();
 
   const props = defineProps({
+    id: Number,
     srcImage: String,
     bookName: String,
     autorName: String,
@@ -16,9 +20,45 @@
 
   const timeReading = ref(null);
 
-  const statusReading = ref(props.reading) // Статус книги (Читается)
+  // получаем статус книги (читается, или прочитано);
+  const statusReading = ref({
+    reading: props.reading,
+    read_it: props.read_it,
+    inColletions: props.inCollection,
+  })
 
-  console.log(statusReading.value) // делаем статус
+  // устанавливаем классы в зависимости от статуса
+  const statusBookReading = computed(() => ({
+    disabled: statusReading.value.inColletions === false, // если нет в коллекции, то мы не можем читать или закончить чтение
+    active: statusReading.value.reading === true,
+  }))
+
+  // устанавливаем классы в зависимости от статуса
+  const statusBookReadIt = computed(() => ({
+    disabled: statusReading.value.inColletions === false || statusReading.value.read_it === null, // если первый раз добавлена в коллекцию
+    active: statusReading.value.read_it === true,
+  }))
+
+  // начинаем читать книгу
+  const readBook = async (idBook) => {
+    const idBlockValue = idBook;
+
+
+    if (statusReading.value.reading !== null) { // если уже читали книгу
+      statusReading.value.reading = !statusReading.value.reading;
+      statusReading.value.read_it = !statusReading.value.read_it;
+    } else { // если первое чтение
+      statusReading.value.reading = true;
+      statusReading.value.read_it = false;
+    }
+
+    try {
+      booksStore.updateBooks(idBlockValue, statusReading.value.reading, statusReading.value.read_it)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
 </script>
 
@@ -61,10 +101,10 @@
     </div>
     <div class="book__tags">
       <div class="book__tags-btns">
-        <div class="book__tag book__tag-btn" :class='"book-tag__status"' title='Завершить чтение'>
+        <div @click='() => readBook(id)' class="book__tag book__tag-btn" :class='statusBookReadIt' title='Завершить чтение'>
           <ArchiveBoxArrowDownIcon />
         </div>
-        <div class="book__tag book__tag-btn" :class='"book-tag__status"' title='Читать'>
+        <div @click='() => readBook(id)' class="book__tag book__tag-btn" :class='statusBookReading' title='Читать'>
           <BookOpenIcon />
         </div>
         <div class="book__tag book__tag-btn" title='Редактировать'>
@@ -163,6 +203,13 @@
         fill: black
       &-btn
         cursor pointer
+        &.disabled
+          opacity .3
+          pointer-events: none
+        &.active
+          pointer-events: none
+          svg
+            fill: #5a8f8a
     &__tags-btns
       display: flex
       align-items: center

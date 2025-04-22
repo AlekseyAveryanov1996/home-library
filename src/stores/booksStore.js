@@ -44,9 +44,35 @@ export const useBooksStore = defineStore('books', () => {
     books.value = false;
   };
 
+  const updateBooks = async (idBook, statusReading, statusReadIt) => {
+
+    try {
+      const { data, error } = await supabase
+        .from('listsBooks')
+        .update(
+          {
+            reading: statusReading,
+            read_it: statusReadIt,
+          }
+        )
+        .eq('id', idBook)
+        .select()
+
+      if (error) throw new Error("Ошибка обновления данных");
+
+
+    } catch (error) {
+      console.log(error)
+    }
+
+
+
+  }
+
   return {
     loadBooks,
     clearBooks,
+    updateBooks,
     books,
     isLoaded,
   }
