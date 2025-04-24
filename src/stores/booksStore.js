@@ -44,28 +44,38 @@ export const useBooksStore = defineStore('books', () => {
     books.value = false;
   };
 
-  const updateBooks = async (idBook, statusReading, statusReadIt) => {
+  const updateBooks = async ({ idBook, statusReading, statusReadIt, dateStartRead = null, dateEndRead = null }) => {
 
     try {
+
+      const updateData = {
+        reading: statusReading,
+        read_it: statusReadIt,
+      }
+
+      // добавляем даты прочтения книг
+      if (dateStartRead !== null) {
+        updateData.date_start_read = new Date(dateStartRead)
+        updateData.date_end_read = null; // при начале чтения всегда обнуляем дату окончания чтения
+      };
+      if (dateEndRead !== null) updateData.date_end_read = new Date(dateEndRead);
+
+
       const { data, error } = await supabase
         .from('listsBooks')
         .update(
-          {
-            reading: statusReading,
-            read_it: statusReadIt,
-          }
+          updateData,
         )
         .eq('id', idBook)
         .select()
 
       if (error) throw new Error("Ошибка обновления данных");
 
+      books.value = books.value.map(book => data.find(({ id }) => id === book.id) || book) // обновляем реактивно карточки книг
 
     } catch (error) {
       console.log(error)
     }
-
-
 
   }
 

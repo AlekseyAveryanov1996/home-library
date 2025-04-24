@@ -1,5 +1,5 @@
 <script setup>
-  import { computed, ref } from 'vue';
+  import { computed, onMounted, ref } from 'vue';
   import { ClockIcon, ArchiveBoxArrowDownIcon, BookOpenIcon, CogIcon, RectangleStackIcon } from '@heroicons/vue/24/solid';
   import { useBooksStore } from '@/stores/booksStore';
 
@@ -18,7 +18,27 @@
     read_it: Boolean, // Прочитано
   })
 
-  const timeReading = ref(null);
+  const timeReading = computed(() => getDayDifference(props.dateStartRead, props.dateEndRead));
+
+  const  getDayDifference = (date1, date2) => {
+    // Если переданы строки - конвертируем в Date
+    if (date1 && date2) {
+      const d1 = typeof date1 === 'string' ? new Date(date1) : date1;
+      const d2 = typeof date2 === 'string' ? new Date(date2) : date2;
+
+      // Проверка на валидность дат
+      if (isNaN(d1.getTime()) || isNaN(d2.getTime())) {
+        throw new Error('Некорректные даты');
+      }
+
+      const timeDiff = Math.abs(d2.getTime() - d1.getTime());
+      return Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+    }
+  }
+
+  onMounted(() => {
+
+  })
 
   // получаем статус книги (читается, или прочитано);
   const statusReading = ref({
@@ -39,24 +59,53 @@
     active: statusReading.value.read_it === true,
   }))
 
-  // начинаем читать книгу
-  const readBook = async (idBook) => {
-    const idBlockValue = idBook;
+  const readBookStart = async (idBlock, propsdateStartRead) => {
+    const idBlockValue = idBlock;
+    let dateStartRead = ref(propsdateStartRead);
 
-
-    if (statusReading.value.reading !== null) { // если уже читали книгу
-      statusReading.value.reading = !statusReading.value.reading;
-      statusReading.value.read_it = !statusReading.value.read_it;
-    } else { // если первое чтение
-      statusReading.value.reading = true;
-      statusReading.value.read_it = false;
-    }
+    dateStartRead.value = getDate();
 
     try {
-      booksStore.updateBooks(idBlockValue, statusReading.value.reading, statusReading.value.read_it)
+      statusReading.value.reading = true;
+      statusReading.value.read_it = false;
+
+      booksStore.updateBooks({
+        idBook: idBlockValue,
+        statusReading: statusReading.value.reading,
+        statusReadIt: statusReading.value.read_it,
+        dateStartRead: dateStartRead.value,
+      })
     } catch (error) {
       console.log(error);
     }
+  }
+
+  const readBookEnd = async (idBlock, propsdateEndRead) => {
+    const idBlockValue = idBlock;
+    const dateEndRead = ref(propsdateEndRead);
+
+    dateEndRead.value = getDate();
+
+    try {
+      statusReading.value.reading = false;
+      statusReading.value.read_it = true;
+      booksStore.updateBooks({
+        idBook: idBlockValue,
+        statusReading: statusReading.value.reading,
+        statusReadIt: statusReading.value.read_it,
+        dateEndRead: dateEndRead.value,
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const getDate = () => {
+    const day = new Date().getDate();
+    const month = ('0' + String(new Date().getMonth() + 1)).slice(-2);
+    const year = new Date().getFullYear();
+
+    return year + '-' + month + '-' + day;
   }
 
 
@@ -74,8 +123,13 @@
     <div class="book__autor-name">
       Автор: {{ autorName }}
     </div>
-    <div v-if='numberOfPage' class="book__count">
-      Количество страниц: {{ numberOfPage }}
+    <div class="book__info-wrapper">
+      <div v-if='numberOfPage' class="book__count">
+        Количество страниц: {{ numberOfPage }}
+      </div>
+      <div v-if="timeReading" class="book__time-reading">
+        Прочитано за: {{ timeReading }}
+      </div>
     </div>
     <div v-if="dateStartRead" class="book__date-wrapper">
       <div class="book__date-label-wrapper">
@@ -96,15 +150,12 @@
       </div>
     </div>
 
-    <div v-if="timeReading !== null" class="book__time-reading">
-      Прочитано за: {{ timeReading }}
-    </div>
     <div class="book__tags">
       <div class="book__tags-btns">
-        <div @click='() => readBook(id)' class="book__tag book__tag-btn" :class='statusBookReadIt' title='Завершить чтение'>
+        <div @click='() => readBookEnd(id, props.dateStartRead)' class="book__tag book__tag-btn" :class='statusBookReadIt' title='Завершить чтение'>
           <ArchiveBoxArrowDownIcon />
         </div>
-        <div @click='() => readBook(id)' class="book__tag book__tag-btn" :class='statusBookReading' title='Читать'>
+        <div @click='() => readBookStart(id, props.dateEndRead)' class="book__tag book__tag-btn" :class='statusBookReading' title='Читать'>
           <BookOpenIcon />
         </div>
         <div class="book__tag book__tag-btn" title='Редактировать'>
@@ -152,7 +203,15 @@
       +min(tabletLarge)
         font-size: 18px
         line-height: 20px
+    &__info-wrapper
+      display: flex
+      align-items: center
+      flex-wrap: wrap
+      gap: 20px
     &__count
+      font-size: 12px
+      line-height: 16px
+    &__time-reading
       font-size: 12px
       line-height: 16px
     &__date-wrapper
@@ -214,6 +273,5 @@
       display: flex
       align-items: center
       gap: 12px;
-
 
 </style>
