@@ -23,6 +23,7 @@ export const useBooksStore = defineStore('books', () => {
       const { data, error } = await supabase
         .from('listsBooks')
         .select('*')
+        .order('id', { ascending: true })
         .eq('user_id', userStore.userid) // Фильтр по user_id, получаем id пользователя из STORE
 
       if (error) {

@@ -7,6 +7,7 @@ import { useUserStore } from '@/stores/userStore';
 const userStore = useUserStore(); // регистрируем Store
 
 const isVisibleDashBoard = ref(false);
+const isLoading = ref(true); // добавляем флаг загрузки
 
 function getTimeHour() {
   return new Date().getHours();
@@ -24,6 +25,7 @@ function visibleDashBoard(value) {
 
 onMounted( async () => {
 
+
   await userStore.fetchUser(); // загружаем данные пользователя
 
   // получаем данные из LocalStorage последний вход был меньше чем 2 часа назад, то показываем DashBoard
@@ -33,12 +35,15 @@ onMounted( async () => {
       isVisibleDashBoard.value = true;
     }
   }
+
+  isLoading.value = false;
+
 })
 </script>
 
 <template>
 
-  <TheStartWindow @visible-dash-board='visibleDashBoard' v-if='!isVisibleDashBoard'/>
+  <TheStartWindow @visible-dash-board='visibleDashBoard' v-if='!isVisibleDashBoard && !isLoading'/>
   <TheDashBoard  v-if='isVisibleDashBoard'/>
 
 </template>

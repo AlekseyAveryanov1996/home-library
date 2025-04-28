@@ -28,6 +28,20 @@
     font-family: var(--font-raleway);
   }
 
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+    /* Прозрачный фон */
+    -webkit-text-fill-color: currentColor !important;
+    /* Текущий цвет текста (наследуется) */
+    caret-color: currentColor !important;
+    /* Цвет курсора */
+    background-color: transparent !important;
+    /* На всякий случай */
+  }
+
   h1 {
     @apply font-bold text-4xl;
   }

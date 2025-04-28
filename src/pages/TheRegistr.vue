@@ -83,18 +83,21 @@
 </script>
 
 <template>
-  <h1>Регистрация</h1>
-  <form action="" @submit.prevent="registr">
-    <InputCustom v-model="email" placeholder-text="E-mail" :isError='emailError' :text-error="messageEmail" type-input="e-mail" is-required/>
-    <InputCustom v-model="password" placeholder-text="Пароль" :is-error='passwordError' :text-error="messagePassword" type-input="password" is-required/>
-    <Btn :type="'submit'">Зарегистрироваться</Btn>
-  </form>
+  <div class="main-form">
+    <h1 class="main-form__title">Регистрация</h1>
+    <form class="main-form__inputs" action="" @submit.prevent="registr">
+      <InputCustom color-text='text-[#0e2b21]' v-model="email" placeholder-text="E-mail" :isError='emailError' :text-error="messageEmail" type-input="e-mail" is-required/>
+      <InputCustom color-text='text-[#0e2b21]' v-model="password" placeholder-text="Пароль" :is-error='passwordError' :text-error="messagePassword" type-input="password" is-required/>
+      <Btn :type="'submit'">Зарегистрироваться</Btn>
+    </form>
 
-  <Toast :toastText='message' :isVisible='isVisibleToast'>
-    <CheckBadgeIcon class='fill-lime-500'/>
-  </Toast>
+    <Toast :toastText='message' :isVisible='isVisibleToast'>
+      <CheckBadgeIcon class='fill-lime-500'/>
+    </Toast>
 
-  <div>Есть аккаунт? </div> <RouterLink to="/logIn/">Войти в систему</RouterLink>
+    <div class="main-form__bottom">Есть аккаунт? <RouterLink to="/logIn/">Войти в систему</RouterLink> </div>
+  </div>
+
 
 
 </template>
