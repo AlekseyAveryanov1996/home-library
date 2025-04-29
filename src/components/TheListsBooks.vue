@@ -2,13 +2,26 @@
   import { computed, onMounted, ref } from 'vue';
   import Book from './Book.vue';
   import { useBooksStore } from '@/stores/booksStore';
+  import Toast from '@/components/UI/Toast.vue';
+  import { useToastStore } from '@/stores/toaster';
+  import functions from '@/functions';
+  import { BookOpenIcon } from '@heroicons/vue/24/solid';
 
   const booksStore = useBooksStore();
   const books = computed(() => booksStore.books) // сохраняем книги в переменную
+  const isVisibleToast = useToastStore();
+  const messageToast = ref('');
+  const colorMessageToast = ref(false);
 
   onMounted(async() => {
     await booksStore.loadBooks(); // загружаем книги
   })
+
+  const callToast = (obj) => {
+    functions.toastVisible(isVisibleToast);
+    messageToast.value = obj.text;
+    colorMessageToast.value = obj.statusBook;
+  }
 
 </script>
 
@@ -26,10 +39,16 @@
         :reading='book.reading'
         :read_it='book.read_it'
         :key='book.id'
+        @toast-visible='callToast'
         />
     </div>
   </div>
   <div v-else>Список книг пуст</div>
+
+  <Toast :toastText='messageToast' :isVisible='isVisibleToast'>
+    <BookOpenIcon :class='colorMessageToast ? "fill-lime-500" : "fill-red-700"'/>
+  </Toast>
+
 </template>
 
 <style lang="stylus">

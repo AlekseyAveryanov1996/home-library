@@ -3,6 +3,8 @@
   import { ClockIcon, ArchiveBoxArrowDownIcon, BookOpenIcon, CogIcon, RectangleStackIcon } from '@heroicons/vue/24/solid';
   import { useBooksStore } from '@/stores/booksStore';
 
+  const emit = defineEmits(['toastVisible']);
+
   const booksStore = useBooksStore();
 
   const props = defineProps({
@@ -35,10 +37,6 @@
       return Math.floor(timeDiff / (1000 * 60 * 60 * 24));
     }
   }
-
-  onMounted(() => {
-
-  })
 
   // получаем статус книги (читается, или прочитано);
   const statusReading = ref({
@@ -100,6 +98,7 @@
     }
   }
 
+
   const getDate = () => {
     const day = new Date().getDate();
     const month = ('0' + String(new Date().getMonth() + 1)).slice(-2);
@@ -152,10 +151,17 @@
 
     <div class="book__tags">
       <div class="book__tags-btns">
-        <div @click='() => readBookEnd(id, props.dateStartRead)' class="book__tag book__tag-btn" :class='statusBookReadIt' title='Завершить чтение'>
+        <div @click='() => {
+          readBookEnd(id, props.dateStartRead);
+          emit("toastVisible", {text: "Вы закончили чтение книги", statusBook: false}) // передаем значение для вызова Toast в родитель
+          }'
+          class="book__tag book__tag-btn" :class='statusBookReadIt' title='Завершить чтение'>
           <ArchiveBoxArrowDownIcon />
         </div>
-        <div @click='() => readBookStart(id, props.dateEndRead)' class="book__tag book__tag-btn" :class='statusBookReading' title='Читать'>
+        <div @click='() => {
+          readBookStart(id, props.dateEndRead);
+          emit("toastVisible", {text: "Вы Начали читать книгу", statusBook: true}) // передаем значение для вызова Toast в родитель
+          }' class="book__tag book__tag-btn" :class='statusBookReading' title='Читать'>
           <BookOpenIcon />
         </div>
         <div class="book__tag book__tag-btn" title='Редактировать'>
