@@ -11,8 +11,8 @@
 	const titleBook = ref(dataBookObj.titleBook);
 	const authorBook = ref(dataBookObj.authorBook);
 	const countPage = ref(dataBookObj.countPage);
-	const dateStart = ref('')
-	const dateEnd = ref('22.02.1996')
+	const dateStart = ref(dataBookObj.dateStartRead);
+	const dateEnd = ref(dataBookObj.dateEndRead);
 
 </script>
 
@@ -32,7 +32,7 @@
             <Btn>Сохранить изменения</Btn>
         </div>
     </div>
-    
+
 </template>
 
 <style lang="stylus">

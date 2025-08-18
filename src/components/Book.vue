@@ -173,6 +173,8 @@
             titleBook: props.bookName,
             authorBook: props.autorName,
             countPage: props.numberOfPage,
+            dateStartRead: props.dateStartRead,
+            dateEndRead: props.dateEndRead,
           }); // вызываем Попап для редактирования данных
           //   booksStore.sendDataComponent({
           //   titleBook: props.bookName,
