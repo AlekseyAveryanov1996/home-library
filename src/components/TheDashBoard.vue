@@ -5,6 +5,8 @@
   import Loader from './UI/Loader.vue';
   import { useLoaderStore } from '@/stores/loaderStore';
   import { computed, ref } from 'vue';
+  import Popup from './UI/Popup.vue';
+  import { useBooksStore } from '@/stores/booksStore';
 
   const loaderStore = useLoaderStore();
 
@@ -18,6 +20,12 @@
   function handleToggleComponent(component) {
     dashBoardTabs.value = component;
   }
+
+  const bookStore = useBooksStore(); // подключаем сторе для передачи данных в попап
+  const popupRef = ref(null); // Переменная для передачи попап в Store
+
+  
+
 
 
 </script>
@@ -34,7 +42,7 @@
 
     <Loader :isVisible='isLoading'/> <!--Меняем состояние Loader-->
 
-    <!-- <div v-if="isLoading" class="loader">loader</div> -->
+    <Popup ref="popupRef" /> <!--Попап компонент-->
   </div>
 
 </template>

@@ -9,6 +9,7 @@ import { ref } from "vue";
 export const useBooksStore = defineStore('books', () => {
   const books = ref([]); // список книг
   const isLoaded = ref(false); // загружены или не загружены книги
+  const dataBook = ref({}); // данные одной книги для редактирования
 
   const loadBooks = async () => {
     if (isLoaded.value) return // если книги уже загружены
@@ -80,11 +81,29 @@ export const useBooksStore = defineStore('books', () => {
 
   }
 
+  const sendDataComponent = (
+    {
+      titleBook,
+      authorBook,
+      countPage,
+    }
+  ) => {
+    dataBook.value = {}; // очищаем при каждом редактировании и записываем новые данные
+    dataBook.value.titleBook = titleBook;
+    dataBook.value.authorBook = authorBook;
+    dataBook.value.countPage = countPage;
+
+    console.log(dataBook.value);
+
+  }
+
   return {
     loadBooks,
     clearBooks,
     updateBooks,
+    sendDataComponent,
     books,
     isLoaded,
+    dataBook,
   }
 })

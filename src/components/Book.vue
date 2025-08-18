@@ -164,7 +164,11 @@
           }' class="book__tag book__tag-btn" :class='statusBookReading' title='Читать'>
           <BookOpenIcon />
         </div>
-        <div class="book__tag book__tag-btn" title='Редактировать'>
+        <div @click='() => booksStore.sendDataComponent({
+          titleBook: props.bookName,
+          authorBook: props.autorName,
+          countPage: props.numberOfPage,
+        })' class="book__tag book__tag-btn" title='Редактировать'>
           <CogIcon />
         </div>
       </div>
