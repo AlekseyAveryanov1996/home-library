@@ -4,7 +4,7 @@
   import { COMPONENTS_DASHBOARD } from '@/cosntants';
   import Loader from './UI/Loader.vue';
   import { useLoaderStore } from '@/stores/loaderStore';
-  import { computed, ref } from 'vue';
+  import { computed, onMounted, provide, ref } from 'vue';
   import Popup from './UI/Popup.vue';
   import { useBooksStore } from '@/stores/booksStore';
 
@@ -21,10 +21,7 @@
     dashBoardTabs.value = component;
   }
 
-  const bookStore = useBooksStore(); // подключаем сторе для передачи данных в попап
-  const popupRef = ref(null); // Переменная для передачи попап в Store
-
-  
+  const bookStore = useBooksStore(); // подключаем сторе для передачи данных в попап  
 
 
 
@@ -42,7 +39,7 @@
 
     <Loader :isVisible='isLoading'/> <!--Меняем состояние Loader-->
 
-    <Popup ref="popupRef" /> <!--Попап компонент-->
+    <Popup /> <!--Попап компонент-->
   </div>
 
 </template>

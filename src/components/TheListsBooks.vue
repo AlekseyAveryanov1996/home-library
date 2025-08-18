@@ -1,5 +1,5 @@
 <script setup>
-  import { computed, onMounted, ref } from 'vue';
+  import { computed, inject, onMounted, ref } from 'vue';
   import Book from './Book.vue';
   import { useBooksStore } from '@/stores/booksStore';
   import Toast from '@/components/UI/Toast.vue';
@@ -22,6 +22,7 @@
     messageToast.value = obj.text;
     colorMessageToast.value = obj.statusBook;
   }
+
 
 </script>
 

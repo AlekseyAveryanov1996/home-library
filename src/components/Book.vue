@@ -1,7 +1,8 @@
 <script setup>
-  import { computed, onMounted, ref } from 'vue';
+  import { computed, ref } from 'vue';
   import { ClockIcon, ArchiveBoxArrowDownIcon, BookOpenIcon, CogIcon, RectangleStackIcon } from '@heroicons/vue/24/solid';
   import { useBooksStore } from '@/stores/booksStore';
+  import { usePopupStore } from '@/stores/popupStore';
 
   const emit = defineEmits(['toastVisible']);
 
@@ -107,6 +108,8 @@
     return year + '-' + month + '-' + day;
   }
 
+  const popupStore = usePopupStore();
+
 
 </script>
 
@@ -164,11 +167,14 @@
           }' class="book__tag book__tag-btn" :class='statusBookReading' title='Читать'>
           <BookOpenIcon />
         </div>
-        <div @click='() => booksStore.sendDataComponent({
-          titleBook: props.bookName,
-          authorBook: props.autorName,
-          countPage: props.numberOfPage,
-        })' class="book__tag book__tag-btn" title='Редактировать'>
+        <div @click='() => {
+            popupStore.openPopup(); // вызываем Попап для редактирования данных
+            booksStore.sendDataComponent({
+            titleBook: props.bookName,
+            authorBook: props.autorName,
+            countPage: props.numberOfPage,
+          })
+        }' class="book__tag book__tag-btn" title='Редактировать'>
           <CogIcon />
         </div>
       </div>

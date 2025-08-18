@@ -93,7 +93,7 @@ export const useBooksStore = defineStore('books', () => {
     dataBook.value.authorBook = authorBook;
     dataBook.value.countPage = countPage;
 
-    console.log(dataBook.value);
+    // console.log(dataBook.value);
 
   }
 
