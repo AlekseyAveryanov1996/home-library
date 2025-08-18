@@ -1,8 +1,9 @@
 <script setup>
-  import { computed, ref } from 'vue';
+  import { computed, markRaw, ref } from 'vue';
   import { ClockIcon, ArchiveBoxArrowDownIcon, BookOpenIcon, CogIcon, RectangleStackIcon } from '@heroicons/vue/24/solid';
   import { useBooksStore } from '@/stores/booksStore';
   import { usePopupStore } from '@/stores/popupStore';
+  import TheSettingsBook from './TheSettingsBook.vue';
 
   const emit = defineEmits(['toastVisible']);
 
@@ -168,12 +169,16 @@
           <BookOpenIcon />
         </div>
         <div @click='() => {
-            popupStore.openPopup(); // вызываем Попап для редактирования данных
-            booksStore.sendDataComponent({
+            popupStore.openPopup(markRaw(TheSettingsBook), {
             titleBook: props.bookName,
             authorBook: props.autorName,
             countPage: props.numberOfPage,
-          })
+          }); // вызываем Попап для редактирования данных
+          //   booksStore.sendDataComponent({
+          //   titleBook: props.bookName,
+          //   authorBook: props.autorName,
+          //   countPage: props.numberOfPage,
+          // })
         }' class="book__tag book__tag-btn" title='Редактировать'>
           <CogIcon />
         </div>

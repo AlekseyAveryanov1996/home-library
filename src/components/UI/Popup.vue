@@ -14,7 +14,10 @@
         </svg>
       </div>
       <div class="popup-content__main">
-        lorem
+        <div v-if="popupStore.component">
+          <component :is="popupStore.component" />
+        </div>
+        <div v-else>Что-то пошло не так</div>
       </div>
     </div>
   </div>
