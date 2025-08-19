@@ -1,5 +1,5 @@
 <script setup>
-  import { computed, onMounted, ref } from 'vue';
+  import { computed, inject, onMounted, ref } from 'vue';
   import Book from './Book.vue';
   import { useBooksStore } from '@/stores/booksStore';
   import Toast from '@/components/UI/Toast.vue';
@@ -18,10 +18,17 @@
   })
 
   const callToast = (obj) => {
-    functions.toastVisible(isVisibleToast);
-    messageToast.value = obj.text;
-    colorMessageToast.value = obj.statusBook;
+    if (obj.isSettingBook) {
+      messageToast.value = obj.text;
+      colorMessageToast.value = obj.statusBook;
+    } else {
+      functions.toastVisible(isVisibleToast);
+      messageToast.value = obj.text;
+      colorMessageToast.value = obj.statusBook;
+    }
+    
   }
+
 
 </script>
 

@@ -81,19 +81,41 @@ export const useBooksStore = defineStore('books', () => {
 
   }
 
-  const sendDataComponent = (
+  const sendDataComponent = async (
     {
+      idBook,
       titleBook,
       authorBook,
       countPage,
+      dateStartRead,
+      dateEndRead,
     }
   ) => {
-    dataBook.value = {}; // очищаем при каждом редактировании и записываем новые данные
-    dataBook.value.titleBook = titleBook;
-    dataBook.value.authorBook = authorBook;
-    dataBook.value.countPage = countPage;
+    try {
+      dataBook.value = {}; // очищаем при каждом редактировании и записываем новые данные
+      dataBook.value.id = idBook,
+      dataBook.value.name_book = titleBook;
+      dataBook.value.autor_book = authorBook;
+      dataBook.value.number_of_page = countPage;
+      dataBook.value.date_start_read = dateStartRead;
+      dataBook.value.date_end_read = dateEndRead;
 
-    console.log(dataBook.value);
+      const { data, error } = await supabase
+        .from('listsBooks')
+        .update(
+          dataBook.value,
+        )
+        .eq('id', dataBook.value.id)
+        .select()
+
+        if (error) throw new Error("Ошибка обновления данных");
+
+        books.value = books.value.map(book => data.find(({ id }) => id === book.id) || book) // обновляем реактивно карточки книг
+
+    } catch (error) {
+      console.log(error)
+    }
+    
 
   }
 

@@ -1,7 +1,9 @@
 <script setup>
-  import { computed, onMounted, ref } from 'vue';
+  import { computed, markRaw, ref } from 'vue';
   import { ClockIcon, ArchiveBoxArrowDownIcon, BookOpenIcon, CogIcon, RectangleStackIcon } from '@heroicons/vue/24/solid';
   import { useBooksStore } from '@/stores/booksStore';
+  import { usePopupStore } from '@/stores/popupStore';
+  import TheSettingsBook from './TheSettingsBook.vue';
 
   const emit = defineEmits(['toastVisible']);
 
@@ -107,6 +109,8 @@
     return year + '-' + month + '-' + day;
   }
 
+  const popupStore = usePopupStore();
+
 
 </script>
 
@@ -164,11 +168,17 @@
           }' class="book__tag book__tag-btn" :class='statusBookReading' title='Читать'>
           <BookOpenIcon />
         </div>
-        <div @click='() => booksStore.sendDataComponent({
-          titleBook: props.bookName,
-          authorBook: props.autorName,
-          countPage: props.numberOfPage,
-        })' class="book__tag book__tag-btn" title='Редактировать'>
+        <div @click='() => {
+            popupStore.openPopup(markRaw(TheSettingsBook), {
+            idBook: props.id,
+            titleBook: props.bookName,
+            authorBook: props.autorName,
+            countPage: props.numberOfPage,
+            dateStartRead: props.dateStartRead,
+            dateEndRead: props.dateEndRead,
+          });
+          emit("toastVisible", {text: "Данные изменены", statusBook: true, isSettingBook: true})
+        }' class="book__tag book__tag-btn" title='Редактировать'>
           <CogIcon />
         </div>
       </div>
