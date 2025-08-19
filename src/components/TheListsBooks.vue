@@ -18,9 +18,15 @@
   })
 
   const callToast = (obj) => {
-    functions.toastVisible(isVisibleToast);
-    messageToast.value = obj.text;
-    colorMessageToast.value = obj.statusBook;
+    if (obj.isSettingBook) {
+      messageToast.value = obj.text;
+      colorMessageToast.value = obj.statusBook;
+    } else {
+      functions.toastVisible(isVisibleToast);
+      messageToast.value = obj.text;
+      colorMessageToast.value = obj.statusBook;
+    }
+    
   }
 
 

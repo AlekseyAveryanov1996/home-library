@@ -26,6 +26,10 @@ const format = (date) => {
   return `${year}-${month}-${day}`
 }
 
+const handleFormatDate = (date) => {
+  const formatDate = format(date);
+  model.value = formatDate;
+}
 </script>
 
 <template>
@@ -39,6 +43,7 @@ const format = (date) => {
         v-model="model"
         :format="format"
         :teleport="true"
+        @update:modelValue="handleFormatDate"
     ></VueDatePicker>
     <input
         v-else

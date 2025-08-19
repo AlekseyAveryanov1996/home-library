@@ -170,17 +170,14 @@
         </div>
         <div @click='() => {
             popupStore.openPopup(markRaw(TheSettingsBook), {
+            idBook: props.id,
             titleBook: props.bookName,
             authorBook: props.autorName,
             countPage: props.numberOfPage,
             dateStartRead: props.dateStartRead,
             dateEndRead: props.dateEndRead,
-          }); // вызываем Попап для редактирования данных
-          //   booksStore.sendDataComponent({
-          //   titleBook: props.bookName,
-          //   authorBook: props.autorName,
-          //   countPage: props.numberOfPage,
-          // })
+          });
+          emit("toastVisible", {text: "Данные изменены", statusBook: true, isSettingBook: true})
         }' class="book__tag book__tag-btn" title='Редактировать'>
           <CogIcon />
         </div>
